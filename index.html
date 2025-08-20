@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiement sécurisé - CoinsArchive</title>
+<link rel="icon" href="https://globaldigitalinvestment.net/favicon.ico">
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: all 0.3s ease-in-out;
+  }
+  .container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+    max-width: 520px;
+    width: 95%;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+  }
+  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
+  h1 {
+    color: #007bff;
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+  }
+  p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .wallet {
+    background: #f8f9fa;
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    word-break: break-all;
+    position: relative;
+    border: 1px solid #ccc;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+  }
+  .copy-btn:hover { background: #1f7a34; }
+  .tooltip {
+    display: inline-block;
+    background: #28a745;
+    color: #fff;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0 1rem 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+
+  .next-btn {
+    background: #007bff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+  }
+  .next-btn:hover { background: #0056b3; }
+
+  .qr-code img {
+    margin: 1rem 0;
+    width: 150px;
+    height: 150px;
+  }
+
+  .progress-container {
+    width: 80%;
+    background: #e0e0e0;
+    border-radius: 20px;
+    margin: 1rem auto;
+    overflow: hidden;
+  }
+  .progress-bar {
+    width: 0%;
+    height: 12px;
+    background: #007bff;
+    border-radius: 20px;
+    transition: width 5s linear;
+  }
+
+  #filePreview {
+    max-width: 100px;
+    max-height: 100px;
+    margin: 0.5rem auto;
+    display: none;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .membership-note {
+    background:#fff3cd;
+    color:#856404;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ffeeba;
+    margin-bottom:1rem;
+    font-size:0.95rem;
+    text-align:left;
+  }
+
+  .security-note {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="container" id="mainContainer">
+  <h1>💳 Paiement sécurisé - CoinsArchive</h1>
+  <p><strong>Montant :</strong> 203 $</p>
+
+  <div class="membership-note">
+    <strong>Important :</strong> Ce paiement de 203 $ sécurise votre <em>Code d’adhésion</em>, indispensable pour compléter votre inscription sur CoinsArchive. 
+    <br><br>
+    Ce code est unique et sert à vérifier que votre compte est authentique et activé. Sans ce code, le formulaire d’inscription ne pourra pas être soumis avec succès et vous n’aurez pas accès aux services exclusifs de la plateforme. 
+    <br><br>
+    Une fois votre paiement confirmé et le code vérifié, vous pourrez finaliser votre inscription en toute sécurité et commencer à utiliser votre compte CoinsArchive pleinement.
+  </div>
+
+  <div class="wallet" id="walletAddress">
+    Adresse BTC : <br><strong>bc1qzkd2k6ydt3hm9zjz8znmsdclcvyuhp4v59lfj8</strong>
+    <button class="copy-btn" onclick="copyWallet()">Copier</button>
+    <span class="tooltip" id="copyTooltip">Copié !</span>
+  </div>
+
+  <div class="qr-code">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=bc1qzkd2k6ydt3hm9zjz8znmsdclcvyuhp4v59lfj8" alt="QR Code BTC">
+  </div>
+
+  <p>Après avoir effectué le paiement, fournissez soit le hash de la transaction, soit téléchargez votre preuve de paiement :</p>
+  <input type="text" placeholder="Entrez le hash de la transaction" id="txHash">
+  <input type="file" id="fileUpload" accept="image/*" onchange="previewFile()">
+  <img id="filePreview" alt="Aperçu du fichier">
+
+  <button class="next-btn" onclick="submitPayment()">Soumettre le paiement</button>
+
+  <p class="security-note">🔒 Transaction sécurisée : Nous ne stockons que votre hash/preuve pour vérification. Vos informations de paiement ne sont jamais conservées.</p>
+</div>
+
+<script>
+function copyWallet() {
+  const walletText = document.getElementById('walletAddress').innerText.split('\n')[1].trim();
+  navigator.clipboard.writeText(walletText).then(() => {
+    const tooltip = document.getElementById('copyTooltip');
+    tooltip.style.opacity = 1;
+    setTimeout(() => { tooltip.style.opacity = 0; }, 2000);
+  });
+}
+
+function previewFile() {
+  const file = document.getElementById('fileUpload').files[0];
+  const preview = document.getElementById('filePreview');
+  if (file) {
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function submitPayment() {
+  const hash = document.getElementById('txHash').value;
+  const file = document.getElementById('fileUpload').files.length;
+
+  if (!hash && !file) {
+    alert('Veuillez fournir soit le hash de la transaction, soit une preuve de paiement.');
+    return;
+  }
+
+  const container = document.getElementById('mainContainer');
+  container.innerHTML = `
+    <h2>🔄 Vérification de votre paiement...</h2>
+    <p>Veuillez patienter un instant. Vous serez redirigé sous peu.</p>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  `;
+
+  const progressBar = document.getElementById('progressBar');
+  setTimeout(() => { progressBar.style.width = '100%'; }, 50);
+
+  setTimeout(() => {
+    window.location.href = 'https://sites.google.com/d/1KGryv9pPHShKk9OMLGGDox5InOxWrGFw/p/15cc--jInijjo69-td9Fh-Us5S4sBFxXe/edit?authuser=2';
+  }, 5000);
+}
+</script>
+</body>
+</html>
